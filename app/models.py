@@ -10,7 +10,7 @@ class User(db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User "{}">'.format(self.username)
 
 
 class Post(db.Model):
