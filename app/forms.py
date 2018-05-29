@@ -31,3 +31,12 @@ class RegistrationForm(FlaskForm):
 
         if user is not None:
             raise ValidationError('Email already in use')
+
+
+class PostForm(FlaskForm):
+    body = StringField('Make a new post:', validators=[DataRequired()])
+    submit = SubmitField('Post')
+
+    def validate_body(self, body):
+        if len(body) > 140:
+            raise ValidationError('Must be shorter than 140 characters (you used {})'.format(len(body)))

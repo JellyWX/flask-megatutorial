@@ -6,6 +6,16 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from app import db
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    if request.method == 'GET':
+        print(request.args)
+
+    else:
+        print(request.form)
+
+    return render_template('test.html', title='Test')
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -65,7 +75,7 @@ def register():
             db.session.commit()
 
             login_user(user)
-            
+
             flash('Thank you for registering, {}'.format(user.username))
 
             return redirect(url_for('index'))
