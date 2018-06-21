@@ -6,15 +6,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from app import db
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    if request.method == 'GET':
-        print(request.args)
-
-    else:
-        print(request.form)
-
-    return render_template('test.html', title='Test')
 
 @app.route('/')
 @app.route('/index')
@@ -82,6 +73,18 @@ def register():
 
         else:
             return render_template('register.html', title='Register', form=form)
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author' : user, 'body' : 'Post #1'},
+        {'author' : user, 'body' : 'Post #2'}
+    ]
+
+    return render_template('user.html', user=user, posts=posts)
+
 
 @app.route('/logout')
 def logout():

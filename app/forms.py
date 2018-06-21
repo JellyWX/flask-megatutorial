@@ -18,7 +18,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        if len(username) > 32:
+        if len(username.data) > 32:
             raise ValidationError('Please enter a username less than 32 characters')
 
         user = User.query.filter_by(username=username.data).first()
@@ -31,12 +31,3 @@ class RegistrationForm(FlaskForm):
 
         if user is not None:
             raise ValidationError('Email already in use')
-
-
-class PostForm(FlaskForm):
-    body = StringField('Make a new post:', validators=[DataRequired()])
-    submit = SubmitField('Post')
-
-    def validate_body(self, body):
-        if len(body) > 140:
-            raise ValidationError('Must be shorter than 140 characters (you used {})'.format(len(body)))
