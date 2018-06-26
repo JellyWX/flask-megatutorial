@@ -14,6 +14,17 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
+
+@app.errorhandler(404)
+def not_found_error(err):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def not_found_error(err):
+    db.session.rollback()
+    return render_template('500.html'), 500
+
+
 @app.route('/')
 @app.route('/index')
 @login_required
