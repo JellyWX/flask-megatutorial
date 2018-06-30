@@ -54,7 +54,10 @@ class User(UserMixin, db.Model):
         return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
     def followed_posts(self):
-        return Posts.query.join(followers, (followers.c.followed_id == self.id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
+        followed = Posts.query.join(followers, (followers.c.followed_id == self.id)).filter(followers.c.follower_id == self.id)
+        own = Posts.query.filter_by(user_id=self.id)
+
+        return followed.union(own).order_by(Post.timestamp.desc())
 
 
 class Post(db.Model):
