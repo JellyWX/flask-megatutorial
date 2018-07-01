@@ -19,7 +19,16 @@
   </form>
   {% endif %}
 
+  {% if prev_url %}
+  <a href="{{ prev_url }}">Earlier Posts</a>
+  {% endif %}
+
   {% for post in posts %}
     {% include "_post.html" %}
   {% endfor %}
+
+  {% if next_url %}
+  <a href="{{ next_url }}">Later Posts</a>
+  {% endif %}
+
 {% endblock %}
