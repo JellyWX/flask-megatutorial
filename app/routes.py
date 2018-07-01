@@ -1,9 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from app import app
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Post
 from app import db
 from datetime import datetime
 
@@ -26,23 +26,28 @@ def not_found_error(err):
     return render_template('500.html'), 500
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been added.')
+        return redirect(url_for('index'))
 
-    posts = [
-    {'author' : {'username' : 'John'},
-    'content' : 'REEEEEEEEEEEEEEEE'},
+    posts = current_user.followed_posts().all()
 
-    {'author' : {'username' : 'Jan'},
-    'content' : 'edwfrgthyjujfhgfgfnghtergs'},
+    return render_template('index.html', title='Home', user=current_user, posts=posts, form=form)
 
-    {'author' : {'username' : 'Jen'},
-    'content' : 'Raaaaaaaaaaaaaaaaaaaaaaa'}
-    ]
 
-    return render_template('index.html', title='Home', user=current_user, posts=posts)
+@app.route('/explore')
+@login_required
+def explore():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', title='Explore', posts=posts, user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
