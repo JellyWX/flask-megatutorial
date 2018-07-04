@@ -21,12 +21,6 @@
 </table>
 
 <script>
-
-var ts = {{ post.timestamp.timestamp() }};
-var shown_format = moment.unix(ts).calendar();
-
-var show_span = document.getElementById("post_{{ post.id }}");
-
-show_span.innerHTML = shown_format[0].toLowerCase() + shown_format.slice(1);
-
+var shown_format = moment.unix({{ post.timestamp.timestamp() }}).calendar();
+document.getElementById("post_{{ post.id }}").innerHTML = shown_format[0].toLowerCase() + shown_format.slice(1);
 </script>
