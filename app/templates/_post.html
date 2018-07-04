@@ -12,10 +12,21 @@
       <a href="{{ url_for('user', username=post.author.username) }}">
         {{ post.author.username }}
       </a>
-      says:
+      said <span id="post_{{ post.id }}"></span>
       <br>
       {{ post.body }}
     </td>
 
   </tr>
 </table>
+
+<script>
+
+var ts = {{ post.timestamp.timestamp() }};
+var shown_format = moment.unix(ts).calendar();
+
+var show_span = document.getElementById("post_{{ post.id }}");
+
+show_span.innerHTML = shown_format[0].toLowerCase() + shown_format.slice(1);
+
+</script>
